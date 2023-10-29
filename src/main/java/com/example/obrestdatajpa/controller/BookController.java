@@ -2,11 +2,14 @@ package com.example.obrestdatajpa.controller;
 
 import com.example.obrestdatajpa.entities.Book;
 import com.example.obrestdatajpa.repository.BookRepository;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +51,8 @@ public class BookController {
      * @return
      */
     @GetMapping("/api/books/{id}")
-    public ResponseEntity<Book> findOneById(@PathVariable Long id){
+    @ApiOperation("Buscar un libro por clave primaria id Long")
+    public ResponseEntity<Book> findOneById(@ApiParam("Clave primaria tipo Long") @PathVariable Long id){
         Optional<Book> bookOpt = bookRepository.findById(id);
         //Opción 1
         return bookOpt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
@@ -108,6 +112,7 @@ public class BookController {
 
     }
     //Borrar un libro en base de datos
+    @ApiIgnore //Ignorar este método para que no aparezca en la documentación de la api Swagger
     @DeleteMapping("/api/books/{id}")
     public ResponseEntity<Book> delete(@PathVariable Long id){
         if (!bookRepository.existsById(id)){
@@ -120,6 +125,7 @@ public class BookController {
 
 
     // Borrar todos los libros de la base de datos
+    @ApiIgnore
     @DeleteMapping("/api/books")
     public ResponseEntity<Book> deleteAll(){
         log.info("REST Request for delete all books");
